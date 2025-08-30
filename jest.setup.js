@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom'
+require('@testing-library/jest-dom')
 
 // Mock environment variables
 process.env.NEXT_PUBLIC_SALT = 'test-salt-key'
@@ -40,6 +40,25 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 // Mock crypto for Node.js environment
-if (typeof window === 'undefined') {
-  global.crypto = require('crypto').webcrypto
+if (!global.crypto) {
+  const nodeCrypto = require('crypto')
+  global.crypto = {
+    subtle: nodeCrypto.webcrypto?.subtle || {
+      generateKey: jest.fn().mockResolvedValue({
+        publicKey: 'mock-public-key',
+        privateKey: 'mock-private-key'
+      }),
+      sign: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+      verify: jest.fn().mockResolvedValue(true),
+      digest: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+      exportKey: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+      importKey: jest.fn().mockResolvedValue('mock-imported-key')
+    },
+    getRandomValues: (arr) => {
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.floor(Math.random() * 256)
+      }
+      return arr
+    }
+  }
 }

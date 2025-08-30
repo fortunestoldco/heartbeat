@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import { eccCrypto, signMeshHeartbeat, generateSecureApiToken } from './cryptoService';
 
 export interface MeshNode {
   id: string;
@@ -34,7 +34,7 @@ class MeshNetworkService {
     // Add configured nodes
     for (let i = 0; i < nodeConfigs.length; i++) {
       const config = nodeConfigs[i];
-      const nodeId = this.generateNodeId(config.url);
+      const nodeId = await this.generateNodeId(config.url);
       
       const node: MeshNode = {
         id: nodeId,
@@ -55,8 +55,9 @@ class MeshNetworkService {
     await this.performHealthCheck();
   }
 
-  private generateNodeId(url: string): string {
-    return crypto.createHash('sha256').update(url).digest('hex').substring(0, 8);
+  private async generateNodeId(url: string): Promise<string> {
+    const hash = await eccCrypto.secureHash(url);
+    return hash.substring(0, 16); // Use first 16 chars of SHA-384 hash
   }
 
   private startHeartbeatMonitoring(): void {
@@ -85,6 +86,10 @@ class MeshNetworkService {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.HEARTBEAT_TIMEOUT);
 
+      // Sign the heartbeat data with ECC P-384
+      const localStatus = await this.getLocalStatus();
+      const heartbeatData = await signMeshHeartbeat(node.id, localStatus);
+      
       const response = await fetch(`${node.url}/api/mesh/heartbeat`, {
         method: 'POST',
         headers: {
@@ -93,8 +98,8 @@ class MeshNetworkService {
         },
         body: JSON.stringify({
           nodeId: node.id,
-          timestamp: Date.now(),
-          status: this.getLocalStatus()
+          signedData: heartbeatData,
+          timestamp: Date.now()
         }),
         signal: controller.signal
       });
@@ -168,9 +173,9 @@ class MeshNetworkService {
     }
   }
 
-  private getLocalStatus(): any {
+  private async getLocalStatus(): Promise<any> {
     return {
-      nodeId: this.generateNodeId('local'),
+      nodeId: await this.generateNodeId('local'),
       timestamp: Date.now(),
       systemStatus: this.systemStatus,
       activeUsers: this.getActiveUsersCount(),
@@ -324,7 +329,7 @@ class MeshNetworkService {
   }
 
   async addNode(url: string, apiToken: string): Promise<string> {
-    const nodeId = this.generateNodeId(url);
+    const nodeId = await this.generateNodeId(url);
     
     const node: MeshNode = {
       id: nodeId,

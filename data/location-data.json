@@ -23,34 +23,58 @@
       "longitude": -73.9934,
       "accuracy": 10,
       "source": "gps"
+    },
+    {
+      "id": "loc123",
+      "timestamp": 1756593658623,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "old",
+      "timestamp": 1756503658636,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "new",
+      "timestamp": 1756590058636,
+      "latitude": 40.7505,
+      "longitude": -73.9934,
+      "accuracy": 10,
+      "source": "gps"
     }
   ],
   "userProfiles": {
     "newuser123": {
       "userId": "newuser123",
       "isLearningMode": true,
-      "learningStartDate": 1756593453108,
+      "learningStartDate": 1756593658614,
       "learningDurationDays": 30,
       "locationPatterns": [],
       "routePatterns": [],
       "anomalyThreshold": 0.7,
       "lastLocationUpdate": 0,
       "totalDataPoints": 0,
-      "createdAt": 1756593453108,
-      "updatedAt": 1756593453108
+      "createdAt": 1756593658614,
+      "updatedAt": 1756593658614
     },
     "existinguser123": {
       "userId": "existinguser123",
       "isLearningMode": true,
-      "learningStartDate": 1756593453113,
+      "learningStartDate": 1756593658620,
       "learningDurationDays": 30,
       "locationPatterns": [],
       "routePatterns": [],
       "anomalyThreshold": 0.7,
       "lastLocationUpdate": 0,
       "totalDataPoints": 0,
-      "createdAt": 1756593453113,
-      "updatedAt": 1756593453113
+      "createdAt": 1756593658620,
+      "updatedAt": 1756593658620
     }
   },
   "anomalies": [],
