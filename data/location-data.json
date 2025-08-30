@@ -47,34 +47,82 @@
       "longitude": -73.9934,
       "accuracy": 10,
       "source": "gps"
+    },
+    {
+      "id": "loc123",
+      "timestamp": 1756594369198,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "old",
+      "timestamp": 1756504369222,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "new",
+      "timestamp": 1756590769222,
+      "latitude": 40.7505,
+      "longitude": -73.9934,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "loc123",
+      "timestamp": 1756594450689,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "old",
+      "timestamp": 1756504450708,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "new",
+      "timestamp": 1756590850708,
+      "latitude": 40.7505,
+      "longitude": -73.9934,
+      "accuracy": 10,
+      "source": "gps"
     }
   ],
   "userProfiles": {
     "newuser123": {
       "userId": "newuser123",
       "isLearningMode": true,
-      "learningStartDate": 1756593658614,
+      "learningStartDate": 1756594450683,
       "learningDurationDays": 30,
       "locationPatterns": [],
       "routePatterns": [],
       "anomalyThreshold": 0.7,
       "lastLocationUpdate": 0,
       "totalDataPoints": 0,
-      "createdAt": 1756593658614,
-      "updatedAt": 1756593658614
+      "createdAt": 1756594450683,
+      "updatedAt": 1756594450683
     },
     "existinguser123": {
       "userId": "existinguser123",
       "isLearningMode": true,
-      "learningStartDate": 1756593658620,
+      "learningStartDate": 1756594450688,
       "learningDurationDays": 30,
       "locationPatterns": [],
       "routePatterns": [],
       "anomalyThreshold": 0.7,
       "lastLocationUpdate": 0,
       "totalDataPoints": 0,
-      "createdAt": 1756593658620,
-      "updatedAt": 1756593658620
+      "createdAt": 1756594450688,
+      "updatedAt": 1756594450688
     }
   },
   "anomalies": [],

@@ -1,4 +1,5 @@
 import { eccCrypto, signMeshHeartbeat, generateSecureApiToken } from './cryptoService';
+import { postQuantumCrypto, encryptMeshMessage, decryptMeshMessage } from './postQuantumCrypto';
 
 export interface MeshNode {
   id: string;
@@ -86,9 +87,46 @@ class MeshNetworkService {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), this.HEARTBEAT_TIMEOUT);
 
-      // Sign the heartbeat data with ECC P-384
       const localStatus = await this.getLocalStatus();
-      const heartbeatData = await signMeshHeartbeat(node.id, localStatus);
+      let heartbeatPayload: any;
+
+      // Use post-quantum cryptography if advanced mode is enabled
+      if (postQuantumCrypto.isAdvancedModeEnabled()) {
+        try {
+          // Get post-quantum public keys for secure communication
+          const publicKeys = await postQuantumCrypto.exportPublicKeys();
+          
+          // Create signed heartbeat data using Dilithium
+          const statusData = JSON.stringify({ nodeId: node.id, status: localStatus, timestamp: Date.now() });
+          const encoder = new TextEncoder();
+          const signature = await postQuantumCrypto.signWithDilithium(encoder.encode(statusData));
+          
+          heartbeatPayload = {
+            nodeId: node.id,
+            statusData,
+            postQuantumSignature: signature,
+            publicKeys,
+            cryptoMode: 'post-quantum',
+            timestamp: Date.now()
+          };
+        } catch (error) {
+          console.warn('Post-quantum signing failed, falling back to ECC:', error);
+          heartbeatPayload = {
+            nodeId: node.id,
+            signedData: await signMeshHeartbeat(node.id, localStatus),
+            cryptoMode: 'ecc',
+            timestamp: Date.now()
+          };
+        }
+      } else {
+        // Use standard ECC P-384 cryptography
+        heartbeatPayload = {
+          nodeId: node.id,
+          signedData: await signMeshHeartbeat(node.id, localStatus),
+          cryptoMode: 'ecc',
+          timestamp: Date.now()
+        };
+      }
       
       const response = await fetch(`${node.url}/api/mesh/heartbeat`, {
         method: 'POST',
@@ -96,11 +134,7 @@ class MeshNetworkService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${node.apiToken}`,
         },
-        body: JSON.stringify({
-          nodeId: node.id,
-          signedData: heartbeatData,
-          timestamp: Date.now()
-        }),
+        body: JSON.stringify(heartbeatPayload),
         signal: controller.signal
       });
 

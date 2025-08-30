@@ -1,6 +1,17 @@
-# AntiCoercion Security System
+# Heartbeat
 
 A comprehensive Next.js personal security application that uses mesh networking to verify user location and requires password entry for any deviation from normal patterns. A pre-configured document is automatically distributed based on user location when security protocols are triggered. The system provides identical responses for both correct and incorrect PIN entries to avoid giving any indication that the security tool has been activated.
+
+## 🔐 Quantum-Ready Cryptography
+
+Heartbeat features **dual-mode cryptographic protection**:
+
+- **Standard Mode**: ECC P-384 cryptography with SHA-384 hashing
+- **Advanced Data Protection**: Post-quantum cryptography using:
+  - **Kyber-768** (ML-KEM) for key encapsulation
+  - **Dilithium-3** (ML-DSA-65) for digital signatures  
+  - **Falcon-512** for backup signatures
+  - Future-proof against quantum computing threats
 
 ## Features
 

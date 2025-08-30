@@ -40,25 +40,56 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 // Mock crypto for Node.js environment
-if (!global.crypto) {
-  const nodeCrypto = require('crypto')
-  global.crypto = {
-    subtle: nodeCrypto.webcrypto?.subtle || {
-      generateKey: jest.fn().mockResolvedValue({
-        publicKey: 'mock-public-key',
-        privateKey: 'mock-private-key'
-      }),
-      sign: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
-      verify: jest.fn().mockResolvedValue(true),
-      digest: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
-      exportKey: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
-      importKey: jest.fn().mockResolvedValue('mock-imported-key')
-    },
-    getRandomValues: (arr) => {
-      for (let i = 0; i < arr.length; i++) {
-        arr[i] = Math.floor(Math.random() * 256)
-      }
-      return arr
+const mockCrypto = {
+  subtle: {
+    generateKey: jest.fn().mockResolvedValue({
+      publicKey: { algorithm: { name: 'ECDSA', namedCurve: 'P-384' } },
+      privateKey: { algorithm: { name: 'ECDSA', namedCurve: 'P-384' } }
+    }),
+    sign: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+    verify: jest.fn().mockResolvedValue(true),
+    digest: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+    exportKey: jest.fn().mockResolvedValue(new ArrayBuffer(48)),
+    importKey: jest.fn().mockResolvedValue({ algorithm: { name: 'ECDSA', namedCurve: 'P-384' } })
+  },
+  getRandomValues: (arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = Math.floor(Math.random() * 256)
     }
+    return arr
   }
 }
+
+if (!global.crypto) {
+  global.crypto = mockCrypto
+} else {
+  // Ensure crypto.subtle exists even if crypto is defined
+  global.crypto.subtle = global.crypto.subtle || mockCrypto.subtle
+  global.crypto.getRandomValues = global.crypto.getRandomValues || mockCrypto.getRandomValues
+}
+
+// Mock @noble/post-quantum library
+jest.mock('@noble/post-quantum/ml-kem', () => ({
+  ml_kem768: {
+    keygen: jest.fn(() => ({
+      publicKey: new Uint8Array(1184),
+      secretKey: new Uint8Array(2400)
+    })),
+    encaps: jest.fn((publicKey) => ({
+      ciphertext: new Uint8Array(1088),
+      sharedSecret: new Uint8Array(32)
+    })),
+    decaps: jest.fn((ciphertext, secretKey) => new Uint8Array(32))
+  }
+}))
+
+jest.mock('@noble/post-quantum/ml-dsa', () => ({
+  ml_dsa65: {
+    keygen: jest.fn(() => ({
+      publicKey: new Uint8Array(1952),
+      secretKey: new Uint8Array(4032)
+    })),
+    sign: jest.fn((secretKey, message) => new Uint8Array(3309)),
+    verify: jest.fn((publicKey, message, signature) => true)
+  }
+}))

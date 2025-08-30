@@ -106,11 +106,11 @@ export default function UserRegistration({ onRegistrationComplete }: Registratio
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: 'auto', mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom align="center">
-        AntiCoercion Security Setup
+        Heartbeat Setup
       </Typography>
       
       <Typography variant="body1" paragraph>
-        Welcome to the AntiCoercion Security System. This application monitors your check-ins and can 
+        Welcome to Heartbeat. This application monitors your check-ins and can 
         optionally track your location patterns for enhanced security.
       </Typography>
 
