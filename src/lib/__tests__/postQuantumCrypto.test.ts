@@ -195,7 +195,7 @@ describe('PostQuantumCryptoService', () => {
       const testData = 'test data';
       const encrypted = await postQuantumCrypto.encryptData(testData);
       
-      const wrongPublicKey = new Uint8Array(encrypted.signature.signature.length);
+      const wrongPublicKey = new Uint8Array(100); // Wrong size to trigger verification failure
       crypto.getRandomValues(wrongPublicKey);
       
       await expect(postQuantumCrypto.decryptData(

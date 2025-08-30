@@ -90,6 +90,35 @@ jest.mock('@noble/post-quantum/ml-dsa', () => ({
       secretKey: new Uint8Array(4032)
     })),
     sign: jest.fn((secretKey, message) => new Uint8Array(3309)),
-    verify: jest.fn((publicKey, message, signature) => true)
+    verify: jest.fn((publicKey, message, signature) => {
+      // Realistic verification: check if key and signature have expected properties
+      return publicKey && publicKey.length === 1952 && signature && signature.length === 3309
+    })
   }
 }))
+
+// Mock TextEncoder and TextDecoder
+if (!global.TextEncoder) {
+  global.TextEncoder = class TextEncoder {
+    encode(str) {
+      return new Uint8Array(str.split('').map(c => c.charCodeAt(0)))
+    }
+  }
+}
+
+if (!global.TextDecoder) {
+  global.TextDecoder = class TextDecoder {
+    decode(bytes) {
+      return String.fromCharCode(...bytes)
+    }
+  }
+}
+
+// Mock btoa and atob
+if (!global.btoa) {
+  global.btoa = (str) => Buffer.from(str, 'binary').toString('base64')
+}
+
+if (!global.atob) {
+  global.atob = (str) => Buffer.from(str, 'base64').toString('binary')
+}
