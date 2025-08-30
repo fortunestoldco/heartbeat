@@ -1,25 +1,65 @@
 # Failsafe Security System
 
-A Next.js web application designed as a personal security failsafe system. Users must check in twice daily (12:00 AM and 12:00 PM) by entering a secure password. Missing a deadline or entering an incorrect password triggers automated document distribution.
+A comprehensive Next.js security application designed as a personal failsafe system with intelligent location tracking and mesh network redundancy. Users must check in twice daily (12:00 AM and 12:00 PM) by entering a secure password. Missing a deadline or entering an incorrect password triggers automated document distribution.
 
 ## Features
 
+### Core Security
 - **Dual Daily Check-ins**: Required at 12:00 AM and 12:00 PM
 - **Countdown Timer**: Real-time display of time remaining until next deadline
 - **Secure Password Verification**: Encrypted password storage and verification
 - **Emergency Alert System**: Automatic email notifications when failsafe is triggered
 - **Location-Based Alerts**: Optional phone alerts with GPS coordinates (Twilio + Google Geolocation)
+
+### Intelligent Location Monitoring
+- **Learning Mode**: 30-day learning period to establish user's normal patterns
+- **Route Pattern Detection**: Learns user's regular routes and locations
+- **Anomaly Detection**: Detects unusual movements, impossible speeds, and location spoofing
+- **Real-time Movement Analysis**: Monitors speed, trajectory, and movement patterns
+- **Ad-hoc PIN Challenges**: Requires PIN entry when unusual movements are detected
+- **Location Spoofing Detection**: Identifies potential GPS manipulation attempts
+
+### Mesh Network Redundancy
+- **Distributed Architecture**: Requires 3+ server instances for full operation
+- **Authenticated Communication**: Secure token-based mesh communication
+- **Automatic Failover**: Triggers challenges when servers go offline
+- **Emergency Protocols**: Immediate alerts when network compromised
+- **Real-time Health Monitoring**: 1-second heartbeat between nodes
+
+### User Interface
 - **Responsive Design**: Clean, modern Material Design interface
 - **Persistent State**: Tracks check-in history and system status
+- **Real-time Notifications**: Live updates on system and location status
 
 ## Security Features
 
+### Password & Authentication
 - Password encryption using SHA-256 with salt
 - One-strike policy: Single incorrect password triggers failsafe
 - Automatic deadline monitoring
+- Multi-factor authentication via location patterns
+- 10-minute PIN challenge timeout
+
+### Location Security
+- Intelligent movement pattern learning
+- Real-time anomaly detection (impossible speeds, erratic patterns)
+- Anti-spoofing measures (accuracy analysis, technical validation)
+- Location-based authentication challenges
+- Route deviation detection
+
+### Network Security
+- Distributed mesh architecture prevents single points of failure
+- Authenticated API token communication between nodes
+- Automatic failover and emergency escalation
+- Real-time health monitoring with 1-second heartbeats
+- Graduated response system (PIN challenge → Emergency alerts)
+
+### Emergency Response
 - Emergency document distribution via email
-- Optional location tracking and phone alerts with TTS coordinates
+- SMS and voice call alerts via Twilio
+- Location tracking and phone alerts with TTS coordinates
 - System lockdown on trigger
+- Immediate escalation on network compromise
 
 ## Setup
 
@@ -42,12 +82,23 @@ MASTER_PASSWORD_HASH=your-password-hash
 DOCUMENT_PATH=/path/to/emergency-document.txt
 NEXT_PUBLIC_SALT=your-unique-salt-key
 
-# Location Services (Optional)
+# Twilio Services (Required for alerts)
 TWILIO_ACCOUNT_SID=your-twilio-account-sid
 TWILIO_AUTH_TOKEN=your-twilio-auth-token
 TWILIO_PHONE_NUMBER=+1234567890
-ALERT_PHONE_NUMBER=+1987654321
+EMERGENCY_CONTACT_PHONE=+1234567890
+
+# Mesh Network Configuration (Required for production)
+MESH_NODE_1_URL=https://node1.yourdomain.com
+MESH_NODE_1_TOKEN=secure-api-token-1
+MESH_NODE_2_URL=https://node2.yourdomain.com  
+MESH_NODE_2_TOKEN=secure-api-token-2
+MESH_NODE_3_URL=https://node3.yourdomain.com
+MESH_NODE_3_TOKEN=secure-api-token-3
+
+# Optional Services
 GOOGLE_GEOLOCATION_API_KEY=your-google-api-key
+ALERT_PHONE_NUMBER=999
 ```
 
 3. Generate your password hash:
@@ -98,6 +149,23 @@ When an incorrect password is entered, the system can optionally:
 
 Location alerts are disabled in development mode and only trigger on incorrect password entry.
 
+## Mesh Network Deployment
+
+For production deployment, set up 3 or more instances of the application across different servers/providers:
+
+1. **Deploy to multiple servers**: Use different hosting providers for maximum redundancy
+2. **Configure unique tokens**: Generate secure API tokens for each node
+3. **Set up DNS**: Configure stable domain names for each node
+4. **Initialize mesh**: Each instance will automatically join the mesh network on startup
+5. **Monitor status**: Check `/api/mesh/status` endpoint for network health
+
+### Mesh Network Behavior
+
+- **3+ Nodes Online**: System fully armed and operational
+- **2 Nodes Online**: System disarmed, triggers PIN challenges for users  
+- **1 Node Online**: Critical state, immediate emergency alerts sent
+- **0 Nodes Online**: All emergency protocols activated
+
 ## Environment Variables
 
 | Variable | Description | Required |
@@ -110,11 +178,20 @@ Location alerts are disabled in development mode and only trigger on incorrect p
 | `MASTER_PASSWORD_HASH` | SHA-256 hash of password | Yes |
 | `DOCUMENT_PATH` | Path to emergency document | Yes |
 | `NEXT_PUBLIC_SALT` | Salt for password hashing | Yes |
-| `TWILIO_ACCOUNT_SID` | Twilio account SID | No |
-| `TWILIO_AUTH_TOKEN` | Twilio auth token | No |
-| `TWILIO_PHONE_NUMBER` | Twilio phone number | No |
-| `ALERT_PHONE_NUMBER` | Number to call for alerts | No |
+| `TWILIO_ACCOUNT_SID` | Twilio account SID | Yes* |
+| `TWILIO_AUTH_TOKEN` | Twilio auth token | Yes* |
+| `TWILIO_PHONE_NUMBER` | Twilio phone number | Yes* |
+| `EMERGENCY_CONTACT_PHONE` | Emergency contact number | Yes* |
+| `MESH_NODE_1_URL` | First mesh node URL | Yes* |
+| `MESH_NODE_1_TOKEN` | First mesh node API token | Yes* |
+| `MESH_NODE_2_URL` | Second mesh node URL | Yes* |
+| `MESH_NODE_2_TOKEN` | Second mesh node API token | Yes* |
+| `MESH_NODE_3_URL` | Third mesh node URL | Yes* |
+| `MESH_NODE_3_TOKEN` | Third mesh node API token | Yes* |
 | `GOOGLE_GEOLOCATION_API_KEY` | Google Geolocation API key | No |
+| `ALERT_PHONE_NUMBER` | Legacy alert number | No |
+
+*Required for full production operation
 
 ## License
 
