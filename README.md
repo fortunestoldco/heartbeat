@@ -1,6 +1,6 @@
-# Failsafe Security System
+# AntiCoercion Security System
 
-A comprehensive Next.js security application designed as a personal failsafe system with intelligent location tracking and mesh network redundancy. Users must check in twice daily (12:00 AM and 12:00 PM) by entering a secure password. Missing a deadline or entering an incorrect password triggers automated document distribution.
+A comprehensive Next.js personal security application that uses mesh networking to verify user location and requires password entry for any deviation from normal patterns. A pre-configured document is automatically distributed based on user location when security protocols are triggered. The system provides identical responses for both correct and incorrect PIN entries to avoid giving any indication that the security tool has been activated.
 
 ## Features
 
@@ -20,11 +20,12 @@ A comprehensive Next.js security application designed as a personal failsafe sys
 - **Location Spoofing Detection**: Identifies potential GPS manipulation attempts
 
 ### Mesh Network Redundancy
-- **Distributed Architecture**: Requires 3+ server instances for full operation
-- **Authenticated Communication**: Secure token-based mesh communication
-- **Automatic Failover**: Triggers challenges when servers go offline
-- **Emergency Protocols**: Immediate alerts when network compromised
-- **Real-time Health Monitoring**: 1-second heartbeat between nodes
+- **Distributed Architecture**: Requires exactly 3 server instances on different hosting providers for full operation
+- **Authenticated Communication**: Secure token-based mesh communication with 1-second heartbeats
+- **Server Takedown Protection**: Any server takedown attempt immediately triggers security protocols
+- **Automatic Failover**: Triggers PIN challenges when servers go offline (2 nodes), emergency alerts when critical (1 node)
+- **Emergency Protocols**: Impossible to disable all instances without triggering immediate alerts
+- **Real-time Health Monitoring**: Continuous monitoring prevents silent takedowns
 
 ### User Interface
 - **Responsive Design**: Clean, modern Material Design interface
@@ -79,7 +80,7 @@ EMAIL_DISTRIBUTION_LIST=emergency@example.com,security@example.com
 
 # Security Configuration (Required)
 MASTER_PASSWORD_HASH=your-password-hash
-DOCUMENT_PATH=/path/to/emergency-document.txt
+DOCUMENT_PATH=/path/to/document.txt
 NEXT_PUBLIC_SALT=your-unique-salt-key
 
 # Twilio Services (Required for alerts)
@@ -176,7 +177,7 @@ For production deployment, set up 3 or more instances of the application across 
 | `SMTP_PASS` | Email password/app password | Yes |
 | `EMAIL_DISTRIBUTION_LIST` | Comma-separated email list | Yes |
 | `MASTER_PASSWORD_HASH` | SHA-256 hash of password | Yes |
-| `DOCUMENT_PATH` | Path to emergency document | Yes |
+| `DOCUMENT_PATH` | Path to document | Yes |
 | `NEXT_PUBLIC_SALT` | Salt for password hashing | Yes |
 | `TWILIO_ACCOUNT_SID` | Twilio account SID | Yes* |
 | `TWILIO_AUTH_TOKEN` | Twilio auth token | Yes* |

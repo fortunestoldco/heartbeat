@@ -1,0 +1,71 @@
+{
+  "locationPoints": [
+    {
+      "id": "loc123",
+      "timestamp": 1756593453115,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "old",
+      "timestamp": 1756503453128,
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "accuracy": 10,
+      "source": "gps"
+    },
+    {
+      "id": "new",
+      "timestamp": 1756589853128,
+      "latitude": 40.7505,
+      "longitude": -73.9934,
+      "accuracy": 10,
+      "source": "gps"
+    }
+  ],
+  "userProfiles": {
+    "newuser123": {
+      "userId": "newuser123",
+      "isLearningMode": true,
+      "learningStartDate": 1756593453108,
+      "learningDurationDays": 30,
+      "locationPatterns": [],
+      "routePatterns": [],
+      "anomalyThreshold": 0.7,
+      "lastLocationUpdate": 0,
+      "totalDataPoints": 0,
+      "createdAt": 1756593453108,
+      "updatedAt": 1756593453108
+    },
+    "existinguser123": {
+      "userId": "existinguser123",
+      "isLearningMode": true,
+      "learningStartDate": 1756593453113,
+      "learningDurationDays": 30,
+      "locationPatterns": [],
+      "routePatterns": [],
+      "anomalyThreshold": 0.7,
+      "lastLocationUpdate": 0,
+      "totalDataPoints": 0,
+      "createdAt": 1756593453113,
+      "updatedAt": 1756593453113
+    }
+  },
+  "anomalies": [],
+  "settings": {
+    "testuser": {
+      "userId": "testuser",
+      "enabled": true,
+      "trackingInterval": 10,
+      "highAccuracyMode": true,
+      "backgroundTracking": true,
+      "anomalyDetection": true,
+      "autoChallenge": true,
+      "challengeTimeout": 15,
+      "learningMode": true,
+      "privacyMode": false
+    }
+  }
+}

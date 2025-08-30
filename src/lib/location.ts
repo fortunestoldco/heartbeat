@@ -9,7 +9,7 @@ export interface LocationData {
   latitude: number;
   longitude: number;
   accuracy: number;
-  source: 'wifi' | 'cell' | 'mixed';
+  source: 'wifi' | 'cell' | 'mixed' | 'gps';
 }
 
 export async function getWiFiNetworks(): Promise<WiFiNetwork[]> {
@@ -115,7 +115,7 @@ export async function getCurrentLocation(): Promise<LocationData> {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
             accuracy: position.coords.accuracy,
-            source: 'mixed',
+            source: 'gps',
           });
         },
         (error) => {

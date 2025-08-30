@@ -4,7 +4,7 @@ export interface LocationPoint {
   latitude: number;
   longitude: number;
   accuracy: number;
-  source: 'wifi' | 'cell' | 'mixed';
+  source: 'wifi' | 'cell' | 'mixed' | 'gps';
   speed?: number;
   heading?: number;
 }
